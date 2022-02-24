@@ -1,7 +1,10 @@
 import os
 import csv
 import numpy as np
+import PIL.Image
+import matplotlib.pyplot as plt
 from torch.utils.data.dataset import Dataset
+from torchvision import transforms
 
 
 class TrainDataset(Dataset):
@@ -117,16 +120,84 @@ class TrainDataset(Dataset):
     def __repr__(self):
         return '=' * 25 + '\nCustom Dataset\n' + \
                 f'total data num: {len(self)}\n' + \
+                f'train data num: {len(self.train_images)}\n' + \
                 f'path: {self.path}\n' + \
                 f'transforms: {self.transforms}\n' + \
                 f'val_ratio: {self.val_ratio}\n' + \
                 '=' * 25
+
+    
+    def __getitem__(self, idx):
+        dir, image, label = self.train_images[idx]
+        img_path = os.path.join(self.path, dir, image)
+        img = PIL.Image.open(img_path)
+        if self.transforms:
+            img = self.transforms(img)
+        return img, label
+
+
+
+
+
+class ValidationDataset(Dataset):
+    
+    def __init__(self, root: str = '/opt/ml/input/data/train', \
+                transforms = None):
+        self.path = os.path.join(root, 'images')
+        self.transforms = transforms
+        self.val_images = self.__read_csv('val.csv')
+
+
+    def __read_csv(self, csv_path):
+        """
+        read validtion csv file
+        """
+        val_images = []
+        f = open(csv_path, 'r')
+        rd = csv.reader(f)
+
+        rd.__next__()
+        for row in rd:
+            dir, file, label = row
+            val_images.append([dir, file, int(label)])
         
+        f.close()
+        return val_images
+
+    
+    def __len__(self):
+        return len(self.val_images)
+
+
+    def __repr__(self) -> str:
+        return '=' * 25 + '\nCustom Dataset for validation\n' + \
+                f'total data num: {len(self)}\n' + \
+                f'path: {self.path}\n' + \
+                f'transforms: {self.transforms}\n' + \
+                '=' * 25
+
+    
+    def __getitem__(self, idx):
+        dir, image, label = self.val_images[idx]
+        img_path = os.path.join(self.path, dir, image)
+        img = PIL.Image.open(img_path)
+        if self.transforms:
+            img = self.transforms(img)
+        return img, label
+        
+
+
+
 
 if __name__ == '__main__':
     # test code
     try:
-        ds = TrainDataset(val_ratio=0.3)
+        transforms = transforms.Compose([transforms.ToTensor()])
+        ds = TrainDataset(transforms=transforms, val_ratio=0.3)
+        vs = ValidationDataset(transforms=transforms)
+        
         print(ds)
+        print(vs)
+        
     except ValueError as e:
         print(e)
