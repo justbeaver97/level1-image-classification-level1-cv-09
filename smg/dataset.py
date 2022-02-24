@@ -56,6 +56,9 @@ class TrainDataset(Dataset):
                 
     
     def __split_validation_set(self):
+        """
+        split image set to train set and validation set
+        """
         train_images = []
         val_images = []
         for label in range(self.LABEL_NUM):
@@ -94,6 +97,9 @@ class TrainDataset(Dataset):
 
     
     def __write_csv(self, csv_path, image_list):
+        """
+        write csv file with image data on specific path
+        """
         f = open(csv_path, 'w')
         wr = csv.writer(f)
 
@@ -118,12 +124,9 @@ class TrainDataset(Dataset):
         
 
 if __name__ == '__main__':
+    # test code
     try:
         ds = TrainDataset(val_ratio=0.3)
         print(ds)
     except ValueError as e:
         print(e)
-
-
-    
-
