@@ -1,5 +1,6 @@
 import os
 import csv
+import numpy as np
 from torch.utils.data.dataset import Dataset
 
 
@@ -59,12 +60,13 @@ class TrainDataset(Dataset):
         val_images = []
         for label in range(self.LABEL_NUM):
             val_num = int(self.nums[label] * self.val_ratio)
+            indicies = np.random.permutation(len(self.images[label])).tolist()
             i = 0
             while i < val_num:
-                val_images.append(self.images[label][i] + [label])
+                val_images.append(self.images[label][indicies[i]] + [label])
                 i += 1
             while i < self.nums[label]:
-                train_images.append(self.images[label][i] + [label])
+                train_images.append(self.images[label][indicies[i]] + [label])
                 i += 1
         return train_images, val_images
 
