@@ -10,7 +10,7 @@ class MyLogger():
         wandb.log(data)
 
     def log_images(self, key, images, caption:Optional[str] = None):
-        images = wandb.Image(images, caption)
+        images = wandb.Image(images, caption=caption)
         wandb.log({key: images})
         
     

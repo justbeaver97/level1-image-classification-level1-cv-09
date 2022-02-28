@@ -56,7 +56,8 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
                 if log_cnt == 0:  # log images for every 5 training        
                     log_cnt = 5
-                    logger.log_images("images", inputs, caption=labels)
+                    caption = phase + labels.tolist()
+                    logger.log_images("images", inputs, caption=caption)
                     
                 optimizer.zero_grad()
 
@@ -69,6 +70,8 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
                 running_loss[phase] += loss.item() * inputs.size(0)
                 running_corrects[phase] += torch.sum(preds == labels.data)
+
+                log_cnt -= 1
     
         train_loss = running_loss['train'] / len(dataloader['train'])
         train_acc = running_corrects['train'] / len(dataloader['train'])
