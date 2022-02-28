@@ -80,6 +80,10 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
         print(f'train loss: {train_loss}, train acc: {train_acc}')
         print(f'val loss: {val_loss}, val acc: {val_acc}')
+        logger.log({'train.loss':train_loss})
+        logger.log({'train.acc':train_acc})
+        logger.log({'val.loss': val_loss})
+        logger.log({'val.acc': val_acc})
         if best_acc < val_acc:
             best_acc = val_acc
             best_model = deepcopy(model.state_dict())
