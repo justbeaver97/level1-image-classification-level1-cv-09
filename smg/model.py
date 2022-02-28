@@ -56,7 +56,7 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
                 if log_cnt == 0:  # log images for every 5 training        
                     log_cnt = 5
-                    caption = phase + labels.tolist()
+                    caption = [phase] + labels.tolist()
                     logger.log_images("images", inputs, caption=caption)
                     
                 optimizer.zero_grad()
