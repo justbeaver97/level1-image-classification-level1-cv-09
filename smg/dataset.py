@@ -119,8 +119,8 @@ class TrainDataset(Dataset):
 
     def __repr__(self):
         return '=' * 25 + '\nCustom Dataset\n' + \
-                f'total data num: {len(self)}\n' + \
-                f'train data num: {sum(self.nums.values())}\n' + \
+                f'total data num: {sum(self.nums.values())}\n' + \
+                f'train data num: {len(self)}\n' + \
                 f'path: {self.path}\n' + \
                 f'transforms: {self.transforms}\n' + \
                 f'val_ratio: {self.val_ratio}\n' + \
