@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.cuda
 import torch.nn as nn
@@ -6,6 +7,7 @@ from torchvision.models import vgg19
 from torch.nn.modules.linear import Linear
 from copy import deepcopy
 from logger import MyLogger
+import datetime
 
 
 def get_pretrained_vgg19(class_num: int):
@@ -94,4 +96,7 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
 
 def save_model_state(model, path):
+    now = datetime.datetime.now()
+    dt = f'{now.year}{now.month}{now.day}{now.hour}{now.minute}{now.second}'
+    path = os.path.join(path, dt + '.pt')
     torch.save(model, path)
