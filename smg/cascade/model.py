@@ -87,6 +87,8 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
         if best_acc < val_acc:
             best_acc = val_acc
             best_model = deepcopy(model.state_dict())
+
+    logger.close()
     
     return best_model
 
