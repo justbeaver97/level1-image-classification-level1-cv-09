@@ -1,5 +1,6 @@
 import os
 import csv
+import PIL.Image
 import numpy as np
 from enum import Enum
 from torch.utils.data import Dataset
@@ -55,7 +56,7 @@ def split_data(data_path:str='/opt/ml/input/data/train', \
     
 class CascadeDataset(Dataset):
 
-    def __init__(self, img_path:str='/opt/ml/input/data/train/images', \
+    def __init__(self, data_path:str='/opt/ml/input/data/train/images', \
                 csv_path:str='/opt/ml/code/smg/cascade/', \
                 transforms=None, mode:DatasetMode=None, \
                 dataType:DataType=None) -> None:
@@ -68,7 +69,7 @@ class CascadeDataset(Dataset):
         elif type(dataType) is not DataType:
             raise TypeError("dataType must be in DataType Enum")
         
-        self.img_path = img_path
+        self.data_path = data_path
         self.csv_path = os.path.join(csv_path, mode.value + '.csv')
         self.transforms = transforms
         self.mode = mode
@@ -91,7 +92,8 @@ class CascadeDataset(Dataset):
         wr = csv.writer(f)
 
         label = ''
-        for dir, img in self.data:
+        for i in range(len(self.data)):
+            dir, img = self.data[i]
             idx, gender, race, age = dir.split('_')
             if self.dataType is DataType.MASK:
                 if img.startswith('mask'):
@@ -111,12 +113,38 @@ class CascadeDataset(Dataset):
             if label == '':
                 raise RuntimeError("labeling is failed")
         
+            self.data[i].append(label)
             wr.writerow([dir, img, label])
         f.close()
+
+
+    def __len__(self):
+        return len(self.data)
+
+    
+    def __repr__(self):
+        return "=" * 25 + "\n" + \
+                f"Custom {self.dataType.value} Dataset for {self.mode.value}\n" + \
+                f"data num: {len(self)}\n" + \
+                f"transforms: {self.transforms}\n" + \
+                f"dataType: {self.dataType.value}\n" + \
+                f"mode: {self.mode.value}\n" + \
+                "=" * 25
+
+
+    def __getitem__(self, idx):
+        dir, img, label = self.data[idx]
+        img_path = os.path.join(self.data_path, dir, img)
+        img = PIL.Image.open(img_path)
+        if self.transforms:
+            img = self.transforms(img)
+        return img, label
             
 
 # test code
 if __name__ == '__main__':
+
+    print('test started')
 
     split_data(val_ratio=0.5)
 
