@@ -97,18 +97,18 @@ class CascadeDataset(Dataset):
             idx, gender, race, age = dir.split('_')
             if self.dataType is DataType.MASK:
                 if img.startswith('mask'):
-                    label = 'Wear'
+                    label = 0  # Wear
                 elif img.startswith('normal'):
-                    label = 'Not Wear'
+                    label = 1  # Not Wear
                 elif img.startswith('incorrect_mask'):
-                    label = 'Incorrect'
+                    label = 2  # Incorrect
             elif self.dataType is DataType.GENDER:
                 if gender == 'male':
-                    label = 'Male'
+                    label = 0  # Male
                 elif gender == 'female':
-                    label = 'Female'
+                    label = 1  # Female
             elif self.dataType is DataType.AGE:
-                label = ['<30', '>=30 and < 60', '>=60'][int(age)//30]
+                label = int(age) // 30
             
             if label == '':
                 raise RuntimeError("labeling is failed")
