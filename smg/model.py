@@ -73,10 +73,10 @@ def train_model(model, dataloader, num_epochs, device=None, criterion=None, opti
 
                 log_cnt -= 1
     
-        train_loss = running_loss['train'] / len(dataloader['train'])
-        train_acc = running_corrects['train'] / len(dataloader['train'])
-        val_loss = running_loss['val'] / len(dataloader['val'])
-        val_acc = running_corrects['val'] / len(dataloader['val'])
+        train_loss = running_loss['train'] / len(dataloader['train'].dataset)
+        train_acc = running_corrects['train'] / len(dataloader['train'].dataset)
+        val_loss = running_loss['val'] / len(dataloader['val'].dataset)
+        val_acc = running_corrects['val'] / len(dataloader['val'].dataset)
 
         print(f'train loss: {train_loss}, train acc: {train_acc}')
         print(f'val loss: {val_loss}, val acc: {val_acc}')
