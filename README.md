@@ -72,7 +72,7 @@ GPU: Tesla V100
 - `SM_GROUND_TRUTH_DIR=[GT dir] SM_OUTPUT_DATA_DIR=[inference output dir] python evaluation.py`
 
 ## Developers : Team CV-09
-- [x] [서예현_T3105](https://github.com/justbeaver97)<br>
+- [x] [서예현_T3105](https://github.com/yehyunsuh)<br>
 - [x] [김영운_T3040](https://github.com/Cronople)<br>
 - [x] [박기련_T3082](https://github.com/parkgr95)<br>
 - [x] [박민수_T3087](https://github.com/mata1139)<br>
